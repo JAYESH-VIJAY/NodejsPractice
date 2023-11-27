@@ -1,0 +1,4 @@
+1. use ndb for debugging the the nodejs code..
+
+two types of erros can occurs in our code, 1. Operational errors and 2. Programming errors
+
