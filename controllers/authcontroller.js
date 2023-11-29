@@ -2,6 +2,7 @@ const User = require("./../models/usermodel");
 const jwt = require("jsonwebtoken");
 const catchAsync = require("./../error/catchAsync");
 const AppError = require("./../error/appError");
+const { promisify } = require("util"); //built in node js
 
 const signToken = (id) => {
   const secret = process.env.JWT_SECRET;
@@ -10,6 +11,7 @@ const signToken = (id) => {
     expiresIn: expiresIn,
   });
 };
+
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create(req.body);
   const token = signToken(newUser._id);
@@ -42,4 +44,33 @@ exports.login = catchAsync(async (req, res, next) => {
     status: "sucess",
     token,
   });
+});
+
+// protect middleware
+exports.protect = catchAsync(async (req, res, next) => {
+  //1. getting token and check if it's there
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWidth("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+  console.log(token);
+  if (!token) {
+    return next(
+      new AppError(
+        "You are not logged in!, please logged in to get access.",
+        401
+      )
+    );
+  }
+  //2. verification token (validating the token)
+  const decoded = await promisify(jwt.verify(token, process.env.JWT_SECRET));
+  console.log(decoded);
+  //3. check if user is still exists
+
+  //4. check if user changed password after the jwt was issued
+
+  next();
 });
