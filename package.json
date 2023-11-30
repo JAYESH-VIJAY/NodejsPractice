@@ -4,9 +4,9 @@
   "description": "jayesh vijay",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
+    "start:dev": "nodemon server.js",
     "debug": "ndb server.js",
-    "start:prod": "NODE_ENV=PRODUCTION && nodemon server.js"
+    "start:prod": "NODE_ENV=PRODUCTION nodemon server.js"
   },
   "author": "jayesh vijay",
   "license": "MIT",

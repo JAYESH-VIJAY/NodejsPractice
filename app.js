@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const AppError = require("./error/appError");
-const userRoute = require("./routes/userRoute");
+const authRoute = require("./routes/authRoute");
 const globalErrorHandler = require("./controllers/errorcontroller");
 const app = express();
 app.use(cors());
@@ -16,7 +16,7 @@ app.get("/", (req, res, next) => {
 
 //========== route connected ========
 
-app.use("/api/v1/auth", userRoute);
+app.use("/api/v1/auth", authRoute);
 
 // always use this in the last of the app.js
 app.all("*", (req, res, next) => {
