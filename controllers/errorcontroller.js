@@ -13,9 +13,13 @@ const handleDuplicateFieldsDB = (err) => {
   return new AppError(message, 400);
 };
 
-const handleValidationErrorDB = (err) => {
+// const handleValidationErrorDB = (err) => {
+
+// }
+
+const handleJWTError = (err) =>
+  new AppError("Invalid token!, please login again", 404);
   
-}
 // ========== devlopment and production error message (operational and programming) =========
 
 const sendErrorDev = (err, res) => {
@@ -58,6 +62,7 @@ module.exports = (err, req, res, next) => {
     let error = { ...err };
     if (error.name === "CastError") error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
+    if (error.name === "JsonWebTokenError") error = handleJWTError(error);
     sendErrorProd(error, res);
   }
 };

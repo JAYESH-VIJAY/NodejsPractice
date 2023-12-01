@@ -11,6 +11,6 @@ const connection = mongoose
   .catch((err) => {
     console.log("there was an error in connecting to the database!, ⚠", err);
   });
-  
+
 
 module.exports = connection;
