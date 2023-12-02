@@ -2,6 +2,7 @@ const User = require("./../models/usermodel");
 const jwt = require("jsonwebtoken");
 const catchAsync = require("./../error/catchAsync");
 const AppError = require("./../error/appError");
+
 const { promisify } = require("util"); //built in node js
 
 const signToken = (id) => {

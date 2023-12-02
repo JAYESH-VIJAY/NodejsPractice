@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
-const UserSchema = new mongoose.Schema(
+const UserSchema = new Schema(
   {
     name: {
       type: String,
@@ -53,13 +53,14 @@ UserSchema.pre("save", async function (next) {
   this.confirmPassword = undefined;
 });
 
+// check user password is correct on login time
 UserSchema.methods.correctPassword = async function (
-  candidatePassoword,
-  userPassword
+  candidatePassoword, // candidate password which was entered by user
+  userPassword // password stored in db in the form of hash
 ) {
   return await bcrypt.compare(candidatePassoword, userPassword);
 };
 
-const User = mongoose.model("User", UserSchema);
+const User = model("User", UserSchema);
 
 module.exports = User;
