@@ -3,9 +3,9 @@ const mongoose = require("mongoose");
 async function _dbConnect(DB_URI) {
   try {
     await mongoose.connect(DB_URI, {
-      bufferCommands: false,// for this line see commented text for full explanation
+      bufferCommands: false, // for this line see commented text for full explanation
     });
-    console.log("DB Connected");
+    console.log("/* ========== Database connected =========== */");
   } catch (error) {
     console.error("DB Connection Failed", error.message);
     throw error; // Propagate the error to the caller if needed
@@ -15,7 +15,7 @@ async function _dbConnect(DB_URI) {
 async function _dbDisconnect() {
   try {
     await mongoose.connection.close();
-    console.log("DB Disconnected");
+    console.log("/* ========== Database Disconnected =========== */");
   } catch (error) {
     console.error("DB Disconnection Failed", error.message);
     throw error; // Propagate the error to the caller if needed
@@ -23,7 +23,6 @@ async function _dbDisconnect() {
 }
 
 module.exports = { _dbConnect, _dbDisconnect };
-
 
 // Command Buffering in Mongoose:
 // Command Buffering Enabled (Default):

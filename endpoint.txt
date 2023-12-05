@@ -1,0 +1,7 @@
+url = localhost:3000/api/vi/questions/get?....
+
+query string means:
+
+rq = random questions (max value = 15);
+cat = category;
+sort 

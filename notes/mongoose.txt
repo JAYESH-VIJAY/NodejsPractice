@@ -1,0 +1,55 @@
+
+Mongoose is an ODM (Object Data Modeling) library for MongoDB and provides a set of methods to interact with MongoDB. Here are some common operations and methods used in Mongoose:
+
+Connection:
+
+mongoose.connect(uri, options): Establish a connection to the MongoDB database.
+Schema:
+
+mongoose.Schema({/* fields and options */}): Define a schema for your data.
+mongoose.model(modelName, schema): Create a model based on a schema.
+CRUD Operations:
+
+Create:
+
+Model.create(documents): Create one or more documents in the database.
+Model.save(): Save a document to the database.
+Read:
+
+Model.find(conditions, projection): Find documents based on conditions.
+Model.findOne(conditions, projection): Find a single document.
+Model.findById(id, projection): Find a document by its ID.
+Model.findByIdAndDelete(id): Find a document by its ID and delete it.
+Model.countDocuments(conditions): Count documents based on conditions.
+Model.aggregate(pipeline): Perform aggregation operations.
+Update:
+
+Model.updateOne(conditions, update, options): Update a single document.
+Model.updateMany(conditions, update, options): Update multiple documents.
+Model.findOneAndUpdate(conditions, update, options): Find a document, update it, and return the updated document.
+Model.findByIdAndUpdate(id, update, options): Find a document by its ID, update it, and return the updated document.
+Delete:
+
+Model.deleteOne(conditions): Delete a single document.
+Model.deleteMany(conditions): Delete multiple documents.
+Model.findOneAndDelete(conditions): Find a document, delete it, and return the deleted document.
+Model.findByIdAndRemove(id): Find a document by its ID, delete it, and return the deleted document.
+Indexes:
+
+Model.createIndexes(): Create indexes defined in the schema.
+Middleware:
+
+schema.pre('hook', callback): Define pre-save hooks or middleware.
+schema.post('hook', callback): Define post-save hooks or middleware.
+Validation:
+
+schema.validate(document): Validate a document against the schema.
+schema.path(field).validate(callback): Define custom validation for a field.
+Populate:
+
+Model.populate(document, options): Populate referenced documents in a query result.
+Transactions:
+
+session.startTransaction(): Start a transaction.
+session.commitTransaction(): Commit a transaction.
+session.abortTransaction(): Abort a transaction.

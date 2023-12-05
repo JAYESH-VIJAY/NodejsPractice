@@ -1,14 +1,20 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const AppError = require("./error/appError");
+
 const authRoute = require("./routes/authRoute");
+const quizRoute = require("./routes/quizRoute");
+
+const AppError = require("./error/appError");
 const globalErrorHandler = require("./controllers/errorcontroller");
-const app = express();
+
+// == ending imports ==
+const app = express(); 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(bodyParser.json());
+
 // =========== global ============
 app.get("/", (req, res, next) => {
   res.send("Hello world!");
@@ -17,6 +23,7 @@ app.get("/", (req, res, next) => {
 //========== route connected ========
 
 app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/questions", quizRoute);
 
 // always use this in the last of the app.js
 app.all("*", (req, res, next) => {
