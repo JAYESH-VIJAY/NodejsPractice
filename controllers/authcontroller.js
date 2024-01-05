@@ -2,7 +2,7 @@ const User = require("./../models/usermodel");
 const jwt = require("jsonwebtoken");
 const catchAsync = require("./../error/catchAsync");
 const AppError = require("./../error/appError");
-  
+
 const { promisify } = require("util"); //built in node js
 
 const signToken = (id) => {
@@ -35,8 +35,8 @@ exports.login = catchAsync(async (req, res, next) => {
   }
   //2. check is email and password is correct
   const user = await User.findOne({ email }).select("+password");
-  const correct = await user.correctPassword(password, user.password);
-  if (!user || !correct) {
+  // const correct = await user.correctPassword(password, user.password);
+  if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError("Incorrect email or password", 401));
   }
   //3. check if everything is okay, send jwt to the client
@@ -70,8 +70,40 @@ exports.protect = catchAsync(async (req, res, next) => {
   const decoded = await promisify(jwt.verify(token, process.env.JWT_SECRET));
   console.log(decoded);
   //3. check if user is still exists
-
+  const currentUser = await User.findOne({ _id: decoded.id });
+  if (!currentUser) {
+    return next(
+      new AppError("User beloging to this user is no longer existed!...", 401)
+    );
+  }
   //4. check if user changed password after the jwt was issued
+  if (currentUser.chagedPasswordAfter(decoded.iat)) {
+    return next(
+      new AppError(
+        "User recently changed the password!..., please login again.",
+        401
+      )
+    );
+  }
 
+  // Grant access to the protected Route...
+  req.user = currentUser;
   next();
 });
+
+//restrictTo middleware
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    // roles is an arrray
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError(
+          " You do not have permission to perform this action..",
+          403
+        )
+      );
+    }
+    next();
+  };
+};

@@ -1,6 +1,7 @@
 const { Schema, model } = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+
 const UserSchema = new Schema(
   {
     name: {
@@ -17,6 +18,11 @@ const UserSchema = new Schema(
       unique: true,
       lowercase: true,
       validate: [validator.isEmail, "Please provide a valid email"],
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin", "staff"],
+      default:'user',
     },
     password: {
       type: String,
@@ -59,6 +65,20 @@ UserSchema.methods.correctPassword = async function (
   userPassword // password stored in db in the form of hash
 ) {
   return await bcrypt.compare(candidatePassoword, userPassword);
+};
+
+// checking if password is changed after the user creation
+UserSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    console.log(this.passwordChangedAt, JWTTimestamp);
+    return changedTimestamp > JWTTimestamp;
+  }
+  //false means password not changed.....
+  return false;
 };
 
 const User = model("User", UserSchema);

@@ -3,37 +3,38 @@ const catchAsync = require("../error/catchAsync");
 const Question = require("./../models/questionmodel");
 
 exports.preFieldAlias = (req, res, next) => {
-  req.query.limit = "5";
-  req.query.sort = "qid questions";
-  req.query.page = "7";
+  req.query.limit = req.query.limit || "20";
+  req.query.sort = req.query.sort || "qid questions";
+
+  // Check if the client provided a value for 'page'
+  if (!req.query.page) {
+    const page = Math.floor(Math.random() * 500);
+    req.query.page = `${page !== 0 ? page : 1}`;
+  }
+
   next();
 };
+
 
 // main Api for getting the question and all features...
 exports.getQuestions = catchAsync(async (req, res, next) => {
   // destructure query string
-  const { cat, sort, page, limit, fields } = req.query;
+  const { cat, sort, page, limit } = req.query;
 
   let queryObj = {};
 
-  switch (true) {
-    case Boolean(cat):
-      queryObj.category = cat;
-      break;
-    // handle the error case where no queryObj parameter available
-    default:
-      res.status(404).json({
-        status: "fail",
-        message: "Invalid or missing queryObj parameters.",
-      });
-      return; // Return here to avoid further execution
-  }
-
-  console.log(
-    "🚀 ~ file: quizcontroller.js:69 ~ exports.getQuestions=catchAsync ~ queryObj:",
-    queryObj
-  );
-
+  // switch (true) {
+  //   case Boolean(cat):
+  //     queryObj.category = cat;
+  //     break;
+  //   // handle the error case where no queryObj parameter available
+  //   default:
+  //     res.status(404).json({
+  //       status: "fail",
+  //       message: "Invalid or missing queryObj parameters.",
+  //     });
+  //     return; // Return here to avoid further execution
+  // }
   // retrieve data from the database based on the query string
   let query = Question.find(queryObj); // Initialize the query here
 
@@ -116,10 +117,6 @@ exports.getAllQuestions = catchAsync(async (req, res, next) => {
 });
 
 exports.getQuestion = catchAsync(async (req, res, next) => {
-  console.log(
-    "🚀 ~ file: quizcontroller.js:31 ~ exports.getQuestion=catchAsync ~ req.params.qid:",
-    req.params.qid
-  );
   // if the value of .select is in - then that field will not show on the response, but if there is no - then only that will show in response
   const question = await Question.find({ qid: req.params.qid }).select(
     "-_id -__v -createdAt -updatedAt"
