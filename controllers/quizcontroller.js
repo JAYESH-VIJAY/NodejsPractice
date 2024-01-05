@@ -15,13 +15,15 @@ exports.preFieldAlias = (req, res, next) => {
   next();
 };
 
-
 // main Api for getting the question and all features...
 exports.getQuestions = catchAsync(async (req, res, next) => {
   // destructure query string
   const { cat, sort, page, limit } = req.query;
 
   let queryObj = {};
+  if (cat) {
+    queryObj.category = cat.toLowerCase();
+  }
 
   // switch (true) {
   //   case Boolean(cat):
@@ -55,7 +57,11 @@ exports.getQuestions = catchAsync(async (req, res, next) => {
   const data = await query;
 
   if (!data.length) {
-    return next(new AppError("No data found for this query...", 404));
+    // return next(new AppError("No data found for this query...", 404));
+    return res.status(404).json({
+      status: "fail",
+      message: "No data found for this query...",
+    });
   }
 
   res.status(200).json({
@@ -69,11 +75,10 @@ exports.getAggregate = catchAsync(async (req, res, next) => {
   const pipeline = await Question.aggregate([
     {
       $group: {
-        _id: '$options',
+        _id: "$options",
         totalDocument: { $sum: 1 },
-        
-      }
-    }
+      },
+    },
   ]);
   res.status(200).json({
     status: "sucess",
