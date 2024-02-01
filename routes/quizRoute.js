@@ -10,7 +10,8 @@ const {
 
 const router = express.Router();
 
-router.post("/", createQuestion).get("/getAll", getAllQuestions);
+router.post("/", createQuestion);
+// .get("/getAll", getAllQuestions);
 router.get("/", preFieldAlias,getQuestions);
 router.get("/aggregate", getAggregate);
 module.exports = router;  

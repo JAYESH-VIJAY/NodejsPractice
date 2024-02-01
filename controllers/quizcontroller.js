@@ -8,7 +8,7 @@ exports.preFieldAlias = (req, res, next) => {
 
   // Check if the client provided a value for 'page'
   if (!req.query.page) {
-    const page = Math.floor(Math.random() * 500);
+    const page = Math.floor(Math.random() *50);
     req.query.page = `${page !== 0 ? page : 1}`;
   }
 
@@ -24,6 +24,7 @@ exports.getQuestions = catchAsync(async (req, res, next) => {
   if (cat) {
     queryObj.category = cat.toLowerCase();
   }
+  console.log("🚀 ~ exports.getQuestions=catchAsync ~ queryObj:", queryObj);
 
   // switch (true) {
   //   case Boolean(cat):
